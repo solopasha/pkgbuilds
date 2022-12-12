@@ -1,0 +1,37 @@
+pkgbase = hyprland-git
+	pkgdesc = Dynamic Tiling Wayland Compositor in early development stages
+	pkgver = v0.19.1beta+r22+ge8b99ae
+	pkgrel = 1
+	url = https://github.com/vaxerski/Hyprland
+	arch = x86_64
+	license = BSD
+	makedepends = git
+	makedepends = cmake
+	makedepends = meson
+	makedepends = vulkan-headers
+	makedepends = glslang
+	makedepends = systemd
+	makedepends = wayland-protocols
+	makedepends = xorg-xwayland
+	depends = mesa
+	depends = xcb-util
+	depends = xcb-util-keysyms
+	depends = libinput
+	depends = libxcomposite
+	depends = xorg-xinput
+	depends = libxkbcommon
+	depends = pango
+	depends = xcb-util-renderutil
+	depends = xcb-util-wm
+	depends = seatd
+	depends = xcb-util-errors
+	source = hyprland::git+https://github.com/vaxerski/Hyprland.git
+	sha256sums = SKIP
+
+pkgname = hyprland-git
+
+pkgname = hyprland-git-devel
+	pkgdesc = Dynamic Tiling Wayland Compositor in early development stages - development files
+	depends = hyprland
+	provides = wlroots
+	conflicts = wlroots

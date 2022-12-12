@@ -1,0 +1,54 @@
+pkgbase=hyprland-git
+pkgname=(hyprland-git hyprland-git-devel)
+pkgver=v0.19.1beta+r22+ge8b99ae
+pkgrel=1
+pkgdesc="Dynamic Tiling Wayland Compositor in early development stages"
+arch=("x86_64")
+url="https://github.com/vaxerski/Hyprland"
+license=('BSD')
+depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors)
+makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols xorg-xwayland)
+source=("${pkgname%-git}::git+https://github.com/vaxerski/Hyprland.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${srcdir}/${pkgname%-git}"
+  	git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
+}
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+build() {
+	cd "${srcdir}/${pkgname%-git}"
+	arch-meson build
+	meson compile -C build
+}
+
+package_hyprland-git() {
+	cd "${srcdir}/${pkgname%-git}"
+	meson install -C build --destdir "$pkgdir"
+	(
+		cd "$pkgdir"
+		_pick devel usr/include
+		_pick devel usr/lib
+	)
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/hyprland-git"
+
+}
+
+package_hyprland-git-devel() {
+	pkgdesc+=" - development files"
+	depends=(hyprland)
+	provides=(wlroots)
+	conflicts=(wlroots)
+
+	mv devel/* "$pkgdir"
+}
