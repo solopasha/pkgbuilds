@@ -6,7 +6,7 @@ pkgdesc="Dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("x86_64")
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors systemd)
+depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors)
 makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols xorg-xwayland jq)
 source=("${pkgname%-git}::git+https://github.com/hyprwm/Hyprland.git"
 		"git+https://github.com/hyprwm/hyprland-protocols.git"
