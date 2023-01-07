@@ -1,19 +1,23 @@
 pkgbase=hyprland-git
 pkgname=(hyprland-git hyprland-git-devel)
-pkgver=v0.19.1beta+r22+ge8b99ae
+pkgver=v0.20.1beta+r0+gaf4b970
 pkgrel=1
-pkgdesc="Dynamic Tiling Wayland Compositor in early development stages"
+pkgdesc="Dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("x86_64")
-url="https://github.com/vaxerski/Hyprland"
+url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors)
-makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols xorg-xwayland)
-source=("${pkgname%-git}::git+https://github.com/vaxerski/Hyprland.git")
-sha256sums=('SKIP')
+depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors systemd)
+makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols xorg-xwayland jq)
+source=("${pkgname%-git}::git+https://github.com/hyprwm/Hyprland.git"
+		"git+https://github.com/hyprwm/hyprland-protocols.git"
+		"git+https://gitlab.freedesktop.org/wlroots/wlroots.git")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
-	cd "${srcdir}/${pkgname%-git}"
-  	git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
+	cd "${pkgname%-git}"
+  	git describe --tags --long | sed 's/[^-]*-g/r&/;s/-/+/g'
 }
 
 _pick() {
@@ -26,14 +30,22 @@ _pick() {
   done
 }
 
+prepare() {
+	cd "${pkgname%-git}"
+	git submodule init
+	git config submodule.subprojects/wlroots.url "$srcdir/wlroots"
+	git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
+	git -c protocol.file.allow=always submodule update
+}
+
 build() {
-	cd "${srcdir}/${pkgname%-git}"
+	cd "${pkgname%-git}"
 	arch-meson build
 	meson compile -C build
 }
 
 package_hyprland-git() {
-	cd "${srcdir}/${pkgname%-git}"
+	cd "${pkgname%-git}"
 	meson install -C build --destdir "$pkgdir"
 	(
 		cd "$pkgdir"

@@ -1,2 +1,6 @@
 *.log
 hyprland
+repo/
+wlroots/
+hyprland-protocols/
+*.pkg*
