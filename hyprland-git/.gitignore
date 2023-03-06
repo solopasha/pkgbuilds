@@ -3,4 +3,5 @@ hyprland
 repo/
 wlroots/
 hyprland-protocols/
+udis86/
 *.pkg*

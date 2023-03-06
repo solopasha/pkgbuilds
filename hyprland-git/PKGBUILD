@@ -1,17 +1,22 @@
 pkgbase=hyprland-git
 pkgname=(hyprland-git hyprland-git-devel)
-pkgver=v0.20.1beta+r0+gaf4b970
+pkgver=v0.22.0beta+r97+g4f647a8e
 pkgrel=1
 pkgdesc="Dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("x86_64")
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors)
-makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols xorg-xwayland jq)
+depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput 
+		libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors
+		libdisplay-info libliftoff)
+makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols 
+			xorg-xwayland jq)
 source=("${pkgname%-git}::git+https://github.com/hyprwm/Hyprland.git"
 		"git+https://github.com/hyprwm/hyprland-protocols.git"
-		"git+https://gitlab.freedesktop.org/wlroots/wlroots.git")
+		"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
+		"git+https://github.com/canihavesomecoffee/udis86.git")
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP')
 
@@ -35,6 +40,7 @@ prepare() {
 	git submodule init
 	git config submodule.subprojects/wlroots.url "$srcdir/wlroots"
 	git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
+	git config submodule.subprojects/udis86.url "$srcdir/udis86"
 	git -c protocol.file.allow=always submodule update
 }
 
@@ -51,6 +57,7 @@ package_hyprland-git() {
 		cd "$pkgdir"
 		_pick devel usr/include
 		_pick devel usr/lib
+		_pick devel usr/share/{pkgconfig,protocols}
 	)
 	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/hyprland-git"
 
