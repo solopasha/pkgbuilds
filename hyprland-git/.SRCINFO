@@ -1,6 +1,6 @@
 pkgbase = hyprland-git
 	pkgdesc = Dynamic tiling Wayland compositor that doesn't sacrifice on its looks
-	pkgver = v0.22.0beta+r97+g4f647a8e
+	pkgver = v0.24.0+r2+g86852cdc
 	pkgrel = 1
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
@@ -42,5 +42,4 @@ pkgname = hyprland-git
 pkgname = hyprland-git-devel
 	pkgdesc = Dynamic tiling Wayland compositor that doesn't sacrifice on its looks - development files
 	depends = hyprland
-	provides = wlroots
 	conflicts = wlroots

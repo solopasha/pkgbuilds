@@ -1,24 +1,24 @@
 pkgbase=hyprland-git
 pkgname=(hyprland-git hyprland-git-devel)
-pkgver=v0.22.0beta+r97+g4f647a8e
+pkgver=v0.24.0+r2+g86852cdc
 pkgrel=1
 pkgdesc="Dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("x86_64")
 url="https://github.com/hyprwm/Hyprland"
 license=('BSD')
-depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput 
+depends=(mesa xcb-util xcb-util-keysyms libinput libxcomposite xorg-xinput
 		libxkbcommon pango xcb-util-renderutil xcb-util-wm seatd xcb-util-errors
 		libdisplay-info libliftoff)
-makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols 
+makedepends=(git cmake meson vulkan-headers glslang systemd wayland-protocols
 			xorg-xwayland jq)
 source=("${pkgname%-git}::git+https://github.com/hyprwm/Hyprland.git"
 		"git+https://github.com/hyprwm/hyprland-protocols.git"
 		"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
 		"git+https://github.com/canihavesomecoffee/udis86.git")
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+			'SKIP'
+			'SKIP'
+			'SKIP')
 
 pkgver() {
 	cd "${pkgname%-git}"
@@ -28,10 +28,10 @@ pkgver() {
 _pick() {
   local p="$1" f d; shift
   for f; do
-    d="$srcdir/$p/${f#$pkgdir/}"
-    mkdir -p "$(dirname "$d")"
-    mv "$f" "$d"
-    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+	d="$srcdir/$p/${f#$pkgdir/}"
+	mkdir -p "$(dirname "$d")"
+	mv "$f" "$d"
+	rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
   done
 }
 
@@ -51,6 +51,8 @@ build() {
 }
 
 package_hyprland-git() {
+	export CFLAGS+=' -ffat-lto-objects'
+	export CXXFLAGS+=' -ffat-lto-objects'
 	cd "${pkgname%-git}"
 	meson install -C build --destdir "$pkgdir"
 	(
@@ -66,7 +68,6 @@ package_hyprland-git() {
 package_hyprland-git-devel() {
 	pkgdesc+=" - development files"
 	depends=(hyprland)
-	provides=(wlroots)
 	conflicts=(wlroots)
 
 	mv devel/* "$pkgdir"
