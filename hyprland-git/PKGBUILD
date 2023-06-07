@@ -46,14 +46,14 @@ prepare() {
 }
 
 build() {
+	export CFLAGS+=' -ffat-lto-objects'
+	export CXXFLAGS+=' -ffat-lto-objects'
 	cd "${pkgname%-git}"
 	arch-meson build
 	meson compile -C build
 }
 
 package_hyprland-git() {
-	export CFLAGS+=' -ffat-lto-objects'
-	export CXXFLAGS+=' -ffat-lto-objects'
 	cd "${pkgname%-git}"
 	meson install -C build --destdir "$pkgdir"
 	(
